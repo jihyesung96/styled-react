@@ -1,7 +1,46 @@
 import React from 'react';
 import styled,{ css } from 'styled-components';
+import { darken } from 'polished';
 
-const ButtonTotal = ({ children,color,size, ...rest}) => {
+const ButtonTotal = ({ children,color,size,fullWidth,...rest}) => {
+    //배경색 변수
+    const colorStyle= css`
+    ${({theme,color})=> {
+        const selected = theme.palette[color];
+        return css`
+        background : ${selected};
+        &:hover {
+            background: ${darken(0.2,selected)};
+        }
+        `;
+    }}
+    `
+    //사이즈
+    const sizes = {
+        large:{
+            height : '3em',
+            fontSize : '1.25em',
+            width : '40%'
+        },
+        medium:{
+            height : '2.5em',
+            fontSize : '1em',
+            width : '25%'
+        },
+        small:{
+            height : '1.75em',
+            fontSize : '0.825em',
+            width : '15%'
+        },
+
+    }
+    const sizeStyle = css`
+    ${({size})=>css`
+        height:${sizes[size].height};
+        font-size: ${sizes[size].fontSize};
+        width:${sizes[size].width};
+    `}
+    `;
     const StyledButton =styled.button`
     /*공통스타일*/
     display : inline-flex;
@@ -16,48 +55,31 @@ const ButtonTotal = ({ children,color,size, ...rest}) => {
 
     /*크기*/
     font-size : 1em;
+    margin: 0.5em;
+    align-items : center;
 
     /*색상*/
-    ${props => {
-        const selected = props.theme.palette[props.color];
-        return css`
-        background : ${selected};
-        `;
-    }}
+    ${colorStyle}
 
     /*크기스타일*/
-    ${props =>{
-        return props.size === 'large' && css`
-        height : 3em;
-        font-size : 1.25em;
-        width:40%;
-        `
-    }}
-    ${props =>{
-        return props.size === 'medium' && css`
-        height : 2.25em;
-        font-size : 1em;
-        width:25%;
-        `
-    }}
-    ${props =>{
-        return props.size === 'small' && css`
-        height : 1.75em;
-        font-size : 0.75em;
-        width:15%;
-        `
-    }}
+    ${sizeStyle}
 
-    &:hover{
-        background : #1c7ed6;
-    }
+    //전체 너비 100%스타일
+    ${props =>{
+    return props.fullWidth &&
+    css`
+    width : 100%;
+    `}}
+
+    
+
     & + & {
         margin-left : 1em;
     }
     `;
     
     return (
-        <StyledButton color={color} size={size}{...rest}>{children}</StyledButton>
+        <StyledButton color={color} size={size} fullWidth={fullWidth} {...rest}>{children}</StyledButton>
     );
 };
 ButtonTotal.defaultProps = {
@@ -65,4 +87,4 @@ ButtonTotal.defaultProps = {
     size : 'medium'
 }
 
-export default ButtonTotal;
+export default ButtonTotal; 
